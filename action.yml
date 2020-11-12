@@ -1,0 +1,14 @@
+name: 'Run tests and upload coverage'
+description: 'Run tests and upload coverage'
+runs:
+  using: "composite"
+  steps:
+      - name: "Run tests"
+        run:  scripts/run_tests.sh
+        shell: bash
+      - name: "Gather coverage"
+        run:  scripts/gather-coverage.sh
+        shell: bash
+      - name: "Upload coverage data to codecov"
+        run:  bash <(curl -s https://codecov.io/bash)
+        shell: bash
