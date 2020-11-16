@@ -4,10 +4,10 @@ runs:
   using: "composite"
   steps:
       - name: "Run tests"
-        run:  scripts/run_tests.sh
+        run:  pkg-ci-scripts/run_tests.sh
         shell: bash
       - name: "Gather coverage"
-        run:  scripts/gather-coverage.sh
+        run:  pkg-ci-scripts/gather-coverage.sh
         shell: bash
       - name: "Upload coverage data to codecov"
         run:  bash <(curl -s https://codecov.io/bash)
