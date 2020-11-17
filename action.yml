@@ -1,5 +1,10 @@
 name: 'Run tests and upload coverage'
 description: 'Run tests and upload coverage'
+inputs:
+  NO_COVERAGE:
+    description: 'set to a non-empty string to suppress gathering coverage'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -8,6 +13,8 @@ runs:
         shell: bash
       - name: "Gather coverage"
         run:  pkg-ci-scripts/gather-coverage.sh
+        env:
+          NO_COVERAGE: ${{ inputs.NO_COVERAGE }}
         shell: bash
       - name: "Upload coverage data to codecov"
         run:  bash <(curl -s https://codecov.io/bash)
