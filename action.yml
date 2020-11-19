@@ -10,6 +10,8 @@ runs:
   steps:
       - name: "Run tests"
         run:  pkg-ci-scripts/run_tests.sh
+        env:
+          NO_COVERAGE: ${{ inputs.NO_COVERAGE }}
         shell: bash
       - name: "Gather coverage"
         run:  pkg-ci-scripts/gather-coverage.sh
