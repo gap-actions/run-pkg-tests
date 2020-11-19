@@ -5,6 +5,10 @@ inputs:
     description: 'set to a non-empty string to suppress gathering coverage'
     required: false
     default: ''
+  GAP_TESTFILE:
+    description: 'the file read by `run_tests.sh`'
+    required: false
+    default: '' # Default used by `run_tests.sh` is currently `tst/testall.g`
 runs:
   using: "composite"
   steps:
@@ -12,6 +16,7 @@ runs:
         run:  pkg-ci-scripts/run_tests.sh
         env:
           NO_COVERAGE: ${{ inputs.NO_COVERAGE }}
+          GAP_TESTFILE: ${{ inputs.GAP_TESTFILE }}
         shell: bash
       - name: "Gather coverage"
         run:  pkg-ci-scripts/gather-coverage.sh
