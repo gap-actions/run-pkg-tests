@@ -1,15 +1,12 @@
 # run-test-for-packages
 
-This GitHub action runs tests and uploads coverage data for GAP packages.
+This GitHub action runs the test-suite of a GAP package.
 
 ## Usage
 
 The action `run-test-for-packages` has to be called by the workflow of a GAP
-package `gap-package`.
-By default it
-- runs the file `tst/testall.g`,
-- gathers coverage data during the run of `tst/testall.g`, and
-- uploads the coverage data to `codecov.io`.
+package.
+By default it runs the file `tst/testall.g`, gathering coverage while doing so.
 
 Its behaviour can be customized via the inputs below.
 
@@ -21,7 +18,7 @@ All of the following inputs are optional.
   - Set to a non-empty string to suppress gathering coverage.
   - default: `''`
 - `GAP_TESTFILE`:
-  - If set to a non-empty string, the file with that name is read by `run_tests.sh`
+  - If set to a non-empty string, the file with that name is read instead of `tst/testall.g`
   - default: `''`
 
 ### Example
@@ -33,8 +30,6 @@ name: CI
 
 on:
   push:
-    branches:
-      - master # change this to 'main' if necessary!
   pull_request:
 
 jobs:
@@ -46,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: gap-actions/setup-gap-for-packages@v1
-      - uses: gap-actions/run-test-for-packages@v1
+      - uses: gap-actions/run-test-for-packages@v2
 ```
 
 ## Contact
