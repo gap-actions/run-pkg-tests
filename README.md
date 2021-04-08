@@ -20,6 +20,9 @@ All of the following inputs are optional.
 - `NO_COVERAGE`:
   - Set to a non-empty string to suppress gathering coverage.
   - default: `''`
+- `GAP_TESTFILE`:
+  - If set to a non-empty string, the file with that name is read by `run_tests.sh`
+  - default: `''`
 
 ### Example
 
