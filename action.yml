@@ -18,11 +18,3 @@ runs:
           NO_COVERAGE: ${{ inputs.NO_COVERAGE }}
           GAP_TESTFILE: ${{ inputs.GAP_TESTFILE }}
         shell: bash
-      - name: "Gather coverage"
-        run:  pkg-ci-scripts/gather-coverage.sh
-        env:
-          NO_COVERAGE: ${{ inputs.NO_COVERAGE }}
-        shell: bash
-      - name: "Upload coverage data to codecov"
-        run:  bash <(curl -s https://codecov.io/bash)
-        shell: bash
