@@ -23,12 +23,16 @@ jobs:
             testfile: 'tst/testall.g'
 
     steps:
+      # the order of the checkout actions is important because all contents of
+      # the target folder of the checkout action is removed
       - uses: actions/checkout@v2
         with:
           repository: gap-packages/example
+      - uses: actions/checkout@v2
+        with:
+          path: this-action/
       - uses: gap-actions/setup-gap-for-packages@v1
-      - uses: ./
+      - uses: ./this-action/
         with:
           NO_COVERAGE: ${{ matrix.no-coverage }}
           GAP_TESTFILE: ${{ matrix.testfile }}
-
