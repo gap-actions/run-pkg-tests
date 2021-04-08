@@ -1,4 +1,4 @@
-# run-test-for-packages
+# run-test-for-packages V2
 
 This GitHub action runs the test-suite of a GAP package.
 
