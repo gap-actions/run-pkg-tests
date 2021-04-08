@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: gap-actions/setup-gap-for-packages@v1
+      - uses: gap-actions/setup-gap-for-packages@v2
       - uses: gap-actions/run-test-for-packages@v2
 ```
 
