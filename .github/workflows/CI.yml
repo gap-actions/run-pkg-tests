@@ -1,0 +1,34 @@
+name: CI
+
+# Trigger the workflow on push or pull request
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    name: ${{ matrix.no-coverage }} ${{ matrix.testfile }}
+    runs-on: ubuntu-latest
+    # Don't run this twice on PRs for branches pushed to the same repository
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) }}
+    strategy:
+      fail-fast: false
+      matrix:
+        no-coverage: ['']
+        testfile: ['']
+        include:
+          - no-coverage: 'no-coverage'
+            testfile: ''
+          - no-coverage: ''
+            testfile: 'tst/testall.g'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: gap-packages/example
+      - uses: gap-actions/setup-gap-for-packages@v1
+      - uses: ./
+        with:
+          NO_COVERAGE: ${{ matrix.no-coverage }}
+          GAP_TESTFILE: ${{ matrix.testfile }}
+
