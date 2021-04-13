@@ -1,5 +1,5 @@
-name: 'Run tests and upload coverage'
-description: 'Run tests and upload coverage'
+name: 'Run package tests'
+description: 'Run package tests'
 inputs:
   NO_COVERAGE:
     description: 'set to a non-empty string to suppress gathering coverage'
