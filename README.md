@@ -1,10 +1,10 @@
-# run-test-for-packages V2
+# run-pkg-tests V2
 
 This GitHub action runs the test-suite of a GAP package.
 
 ## Usage
 
-The action `run-test-for-packages` has to be called by the workflow of a GAP
+The action `run-pkg-tests` has to be called by the workflow of a GAP
 package.
 By default it runs the file `tst/testall.g`, gathering coverage while doing so.
 
@@ -41,17 +41,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: gap-actions/setup-gap-for-packages@v2
-      - uses: gap-actions/run-test-for-packages@v2
+      - uses: gap-actions/run-pkg-tests@v2
 ```
 
 ## Contact
 Please submit bug reports, suggestions for improvements and patches via
-the [issue tracker](https://github.com/gap-actions/run-test-for-packages/issues)
+the [issue tracker](https://github.com/gap-actions/run-pkg-tests/issues)
 or via email to
 [Sergio Siccha](mailto:siccha@mathematik.uni-kl.de).
 
 ## License
-The action `run-test-for-packages` is free software; you can redistribute
+The action `run-pkg-tests` is free software; you can redistribute
 and/or modify it under the terms of the GNU General Public License as published
 by the Free Software Foundation; either version 2 of the License, or (at your
 opinion) any later version. For details, see the file `LICENSE` distributed
