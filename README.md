@@ -18,8 +18,8 @@ All of the following inputs are optional.
   - Set to a non-empty string to suppress gathering coverage.
   - default: `''`
 - `GAP_TESTFILE`:
-  - If set to a non-empty string, the file with that name is read instead of `tst/testall.g`
-  - default: `''`
+  - The name of the GAP file to be read for executing the package tests.
+  - default: `'tst/testall.g'`
 
 ### Example
 
@@ -52,6 +52,7 @@ or via email to
 [Sergio Siccha](mailto:siccha@mathematik.uni-kl.de).
 
 ## License
+
 The action `run-pkg-tests` is free software; you can redistribute
 and/or modify it under the terms of the GNU General Public License as published
 by the Free Software Foundation; either version 2 of the License, or (at your
