@@ -47,4 +47,4 @@ runs:
         env:
           NO_COVERAGE: ${{ inputs.NO_COVERAGE }}
           GAP_TESTFILE: ${{ inputs.GAP_TESTFILE }}
-        shell: bash
+        shell: C:\cygwin64\bin\bash.exe --login -o igncr '{0}'
