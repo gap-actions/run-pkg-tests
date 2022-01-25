@@ -9,6 +9,9 @@ inputs:
     description: 'The name of the GAP file to be read for executing the package tests'
     required: false
     default: 'tst/testall.g'
+env:
+  CHERE_INVOKING: 1
+
 runs:
   using: "composite"
   steps:
