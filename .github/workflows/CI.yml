@@ -4,6 +4,8 @@ name: CI
 on:
   - push
   - pull_request
+env:
+  CHERE_INVOKING: 1
 
 jobs:
   test:
@@ -25,13 +27,17 @@ jobs:
     steps:
       # the order of the checkout actions is important because all contents of
       # the target folder of the checkout action is removed
-      - uses: actions/checkout@v2
+      - name: "Clone the Example package"
+        uses: actions/checkout@v2
         with:
           repository: gap-packages/example
-      - uses: actions/checkout@v2
+      - name: "Check out this repository"
+        uses: actions/checkout@v2
         with:
           path: this-action/
       - uses: gap-actions/setup-gap@v2
+        with:
+          GAP_PKGS_TO_BUILD: ''
       - uses: gap-actions/build-pkg@v1
       - uses: ./this-action/
         with:
