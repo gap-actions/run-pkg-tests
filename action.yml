@@ -27,11 +27,11 @@ runs:
          # to allow the occasional instance where a package wants to also
          # run the tests of others packages, by invoking this script multiple
          # times in different directories)
-         mkdir -p gaproot/pkg/
-         ln -f -s $PWD gaproot/pkg/
+         mkdir -p /tmp/gaproot/pkg/
+         ln -f -s $PWD /tmp/gaproot/pkg/
 
          # start GAP with custom GAP root, to ensure correct package version is loaded
-         GAP="$GAPROOT/bin/gap.sh -l $PWD/gaproot; --quitonbreak"
+         GAP="$GAPROOT/bin/gap.sh -l /tmp/gaproot; --quitonbreak"
 
          # Unless explicitly turned off by setting the NO_COVERAGE environment variable,
          # we collect coverage data
