@@ -2,8 +2,11 @@ name: CI
 
 # Trigger the workflow on push or pull request
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - master
+  pull_request:
+
 env:
   CHERE_INVOKING: 1
 
@@ -11,8 +14,6 @@ jobs:
   test:
     name: ${{ matrix.no-coverage }} ${{ matrix.testfile }}
     runs-on: ubuntu-latest
-    # Don't run this twice on PRs for branches pushed to the same repository
-    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) }}
     strategy:
       fail-fast: false
       matrix:
