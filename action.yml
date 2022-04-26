@@ -48,9 +48,11 @@ runs:
          if IsEmpty(GAP_TESTFILE) or not IsExistingFile(GAP_TESTFILE) then
              GAP_TESTFILE := info.TestFile;
          fi;
+         SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
+         SetPackagePath(info.PackageName, "$PWD");
+         LoadPackage(info.PackageName);
+         SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
          if EndsWith(GAP_TESTFILE, ".tst") then
-             SetPackagePath(info.PackageName, "$PWD");
-             LoadPackage(info.PackageName);
              QUIT_GAP(Test(GAP_TESTFILE, rec(compareFunction := "uptowhitespace")));
          else
              Read(GAP_TESTFILE);
