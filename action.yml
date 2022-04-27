@@ -48,8 +48,9 @@ runs:
          if IsEmpty(GAP_TESTFILE) or not IsExistingFile(GAP_TESTFILE) then
              GAP_TESTFILE := info.TestFile;
          fi;
+         # Load the package with debug info
          SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
-         SetPackagePath(info.PackageName, "$PWD");
+         SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PWD)");
          LoadPackage(info.PackageName);
          SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
          if EndsWith(GAP_TESTFILE, ".tst") then
