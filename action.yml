@@ -6,9 +6,9 @@ inputs:
     required: false
     default: ''
   GAP_TESTFILE:
-    description: 'The name of the GAP file to be read for executing the package tests'
+    description: 'Name of the GAP file to be read for executing the package tests (overrides TestFile in PackageInfo.g)'
     required: false
-    default: 'tst/testall.g'
+    default: ''
 env:
   CHERE_INVOKING: 1
 
@@ -27,24 +27,38 @@ runs:
          # to allow the occasional instance where a package wants to also
          # run the tests of others packages, by invoking this script multiple
          # times in different directories)
-         mkdir -p gaproot/pkg/
-         ln -f -s $PWD gaproot/pkg/
+         mkdir -p /tmp/gaproot/pkg/
+         ln -f -s $PWD /tmp/gaproot/pkg/
 
          # start GAP with custom GAP root, to ensure correct package version is loaded
-         GAP="$GAPROOT/bin/gap.sh -l $PWD/gaproot; --quitonbreak"
+         GAP="$GAPROOT/bin/gap.sh -l /tmp/gaproot; --quitonbreak"
 
          # Unless explicitly turned off by setting the NO_COVERAGE environment variable,
          # we collect coverage data
-         if [[ -z $NO_COVERAGE ]]; then
+         if [[ -z "${{ inputs.NO_COVERAGE }}" ]]; then
              mkdir -p ${COVDIR-coverage}
              GAP="$GAP --cover ${COVDIR-coverage}/$(mktemp XXXXXX).coverage"
          fi
 
-         # TODO: honor TestFile from PackageInfo record, but make sure that it
-         # is for the package in the current directory
-         $GAP ${GAP_TESTFILE:-tst/testall.g}
+         cat > __TEST_RUNNNER__.g <<EOF
 
-        env:
-          NO_COVERAGE: ${{ inputs.NO_COVERAGE }}
-          GAP_TESTFILE: ${{ inputs.GAP_TESTFILE }}
+         GAP_TESTFILE:="${{ inputs.GAP_TESTFILE }}";
+         Read("PackageInfo.g");
+         info := GAPInfo.PackageInfoCurrent;
+         if IsEmpty(GAP_TESTFILE) or not IsExistingFile(GAP_TESTFILE) then
+             GAP_TESTFILE := info.TestFile;
+         fi;
+         SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
+         SetPackagePath(info.PackageName, "$PWD");
+         LoadPackage(info.PackageName);
+         SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
+         if EndsWith(GAP_TESTFILE, ".tst") then
+             QUIT_GAP(Test(GAP_TESTFILE, rec(compareFunction := "uptowhitespace")));
+         else
+             Read(GAP_TESTFILE);
+             Error("Package TestFile did not exit gap");
+         fi;
+         EOF
+         $GAP __TEST_RUNNNER__.g
+
         shell: C:\cygwin64\bin\bash.exe --login -o igncr '{0}'

@@ -47,12 +47,9 @@ jobs:
 
 ## Contact
 Please submit bug reports, suggestions for improvements and patches via
-the [issue tracker](https://github.com/gap-actions/run-pkg-tests/issues)
-or via email to
-[Sergio Siccha](mailto:siccha@mathematik.uni-kl.de).
+the [issue tracker](https://github.com/gap-actions/run-pkg-tests/issues).
 
 ## License
-
 The action `run-pkg-tests` is free software; you can redistribute
 and/or modify it under the terms of the GNU General Public License as published
 by the Free Software Foundation; either version 2 of the License, or (at your
