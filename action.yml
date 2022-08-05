@@ -53,6 +53,7 @@ runs:
          SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PWD)");
          LoadPackage(info.PackageName);
          SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
+         Print("Now running tests from ", GAP_TESTFILE, "\n");
          if EndsWith(GAP_TESTFILE, ".tst") then
              QUIT_GAP(Test(GAP_TESTFILE, rec(compareFunction := "uptowhitespace")));
          else
