@@ -16,6 +16,12 @@ inputs:
     required: false
     type: boolean
     default: false
+  GAP_FLAGS:
+    description: 'Command line flags (and possibly there arguments) to pass to gap'
+    required: false
+    type: string
+    default: ''
+
 env:
   CHERE_INVOKING: 1
 
@@ -43,6 +49,7 @@ runs:
          if ${{ inputs.only-needed }} = 'true' ; then
            GAP="$GAP -A"
          fi
+         GAP="$GAP ${{ inputs.GAP_FLAGS }}"
 
          # Unless explicitly turned off by setting the NO_COVERAGE environment variable,
          # we collect coverage data
