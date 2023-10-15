@@ -17,7 +17,7 @@ inputs:
     type: boolean
     default: false
   GAP_FLAGS:
-    description: 'Command line flags (and possibly there arguments) to pass to gap'
+    description: 'Command line flags (and possibly their arguments) to pass to gap'
     required: false
     type: string
     default: ''
