@@ -29,11 +29,11 @@ jobs:
       # the order of the checkout actions is important because all contents of
       # the target folder of the checkout action is removed
       - name: "Clone the Example package"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: gap-packages/example
       - name: "Check out this repository"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: this-action/
       - uses: gap-actions/setup-cygwin@v1

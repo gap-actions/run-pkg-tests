@@ -4,11 +4,18 @@ inputs:
   NO_COVERAGE:
     description: 'set to a non-empty string to suppress gathering coverage'
     required: false
+    type: string
     default: ''
   GAP_TESTFILE:
     description: 'Name of the GAP file to be read for executing the package tests (overrides TestFile in PackageInfo.g)'
     required: false
+    type: string
     default: ''
+  only-needed:
+    description: 'If set to true then only needed dependencies of the package being tested are loaded'
+    required: false
+    type: boolean
+    default: false
 env:
   CHERE_INVOKING: 1
 
@@ -31,7 +38,11 @@ runs:
          ln -f -s $PWD /tmp/gaproot/pkg/
 
          # start GAP with custom GAP root, to ensure correct package version is loaded
-         GAP="$GAPROOT/bin/gap.sh -l /tmp/gaproot; --quitonbreak"
+         GAP="$GAPROOT/gap -l /tmp/gaproot; --quitonbreak"
+
+         if ${{ inputs.only-needed }} = 'true' ; then
+           GAP="$GAP -A"
+         fi
 
          # Unless explicitly turned off by setting the NO_COVERAGE environment variable,
          # we collect coverage data
@@ -51,8 +62,13 @@ runs:
          # Load the package with debug info
          SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
          SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PWD)");
-         LoadPackage(info.PackageName);
+         if ${{ inputs.only-needed }} = true then
+            LoadPackage(info.PackageName : OnlyNeeded);
+         else
+            LoadPackage(info.PackageName);
+         fi;
          SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
+         Print("Now running tests from ", GAP_TESTFILE, "\n");
          if EndsWith(GAP_TESTFILE, ".tst") then
              QUIT_GAP(Test(GAP_TESTFILE, rec(compareFunction := "uptowhitespace")));
          else
