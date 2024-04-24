@@ -21,6 +21,11 @@ inputs:
     required: false
     type: boolean
     default: false
+  pre-gap:
+    description: 'Prefix for the ''GAP'' shell variable used by this action to launch GAP (e.g. setting this to ''valgrind --trace-children=yes --leak-check=full'' will run GAP through valgrind)'
+    required: false
+    type: string
+    default: ''
 env:
   CHERE_INVOKING: 1
 
@@ -44,6 +49,11 @@ runs:
 
          # start GAP with custom GAP root, to ensure correct package version is loaded
          GAP="$GAPROOT/gap -l /tmp/gaproot; --quitonbreak"
+
+         # Prepend pre-gap prefix, if it exists
+         if [[ ! -z "${{ inputs.pre-gap }}" ]]; then
+             GAP="${{ inputs.pre-gap }} $GAP"
+         fi
 
          if ${{ inputs.only-needed }} = 'true' ; then
            GAP="$GAP -A"
