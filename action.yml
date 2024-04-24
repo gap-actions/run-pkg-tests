@@ -16,6 +16,11 @@ inputs:
     required: false
     type: boolean
     default: false
+  pre-gap:
+    description: 'Commands to be prepended to gap'
+    required: false
+    type: string
+    default: ''
 env:
   CHERE_INVOKING: 1
 
@@ -37,8 +42,9 @@ runs:
          mkdir -p /tmp/gaproot/pkg/
          ln -f -s $PWD /tmp/gaproot/pkg/
 
-         # start GAP with custom GAP root, to ensure correct package version is loaded
-         GAP="$GAPROOT/gap -l /tmp/gaproot; --quitonbreak"
+         # start GAP with custom GAP root and any pre-gap commands, to ensure
+         # correct package version is loaded
+         GAP="${{ inputs.pre-gap }} $GAPROOT/gap -l /tmp/gaproot; --quitonbreak"
 
          if ${{ inputs.only-needed }} = 'true' ; then
            GAP="$GAP -A"
