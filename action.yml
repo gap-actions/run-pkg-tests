@@ -17,7 +17,7 @@ inputs:
     type: boolean
     default: false
   pre-gap:
-    description: 'Commands to be prepended to gap'
+    description: 'Commands to be executed immediately before GAP is launched (e.g. ''valgrind --trace-children=yes --leak-check=full'')'
     required: false
     type: string
     default: ''
