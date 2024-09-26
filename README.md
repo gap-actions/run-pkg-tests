@@ -20,6 +20,9 @@ All of the following inputs are optional.
 - `GAP_TESTFILE`:
   - The name of the GAP file to be read for executing the package tests.
   - default: `'tst/testall.g'`
+- `warnings-as-errors`:
+  - Set to `true` to treat warnings produced when loading the package as errors.
+  - default: `false`
 
 ### Example
 
@@ -46,10 +49,12 @@ jobs:
 ```
 
 ## Contact
+
 Please submit bug reports, suggestions for improvements and patches via
 the [issue tracker](https://github.com/gap-actions/run-pkg-tests/issues).
 
 ## License
+
 The action `run-pkg-tests` is free software; you can redistribute
 and/or modify it under the terms of the GNU General Public License as published
 by the Free Software Foundation; either version 2 of the License, or (at your
