@@ -25,6 +25,9 @@ All of the following inputs are optional.
     setting this to `valgrind --trace-children=yes --leak-check=full` will run
     GAP through valgrind)'
   - default: `''`
+- `warnings-as-errors`:
+  - Set to `true` to treat warnings produced when loading the package as errors.
+  - default: `false`
 
 ### Example
 
