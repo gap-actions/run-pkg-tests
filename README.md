@@ -20,6 +20,12 @@ All of the following inputs are optional.
 - `GAP_TESTFILE`:
   - The name of the GAP file to be read for executing the package tests.
   - default: `'tst/testall.g'`
+- `pre-gap`:
+  - Commands to be executed immediately before GAP is launched. For example,
+    specifying `'valgrind --trace-children=yes --leak-check=full'` will ensure
+    that GAP is launched using Valgrind, and the test-suite will be checked for
+    memory leaks.
+  - default: `''`
 
 ### Example
 
@@ -46,10 +52,12 @@ jobs:
 ```
 
 ## Contact
+
 Please submit bug reports, suggestions for improvements and patches via
 the [issue tracker](https://github.com/gap-actions/run-pkg-tests/issues).
 
 ## License
+
 The action `run-pkg-tests` is free software; you can redistribute
 and/or modify it under the terms of the GNU General Public License as published
 by the Free Software Foundation; either version 2 of the License, or (at your
