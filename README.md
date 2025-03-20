@@ -23,6 +23,12 @@ All of the following inputs are optional.
 - `warnings-as-errors`:
   - Set to `true` to treat warnings produced when loading the package as errors.
   - default: `false`
+- `pre-gap`:
+  - Commands to be executed immediately before GAP is launched. For example,
+    specifying `'valgrind --trace-children=yes --leak-check=full'` will ensure
+    that GAP is launched using Valgrind, and the test-suite will be checked for
+    memory leaks.
+  - default: `''`
 
 ### Example
 
