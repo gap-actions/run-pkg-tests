@@ -16,6 +16,16 @@ inputs:
     required: false
     type: boolean
     default: false
+  pre-gap:
+    description: 'Commands to be executed immediately before GAP is launched (e.g. ''valgrind --trace-children=yes --leak-check=full'')'
+    required: false
+    type: string
+    default: ''
+  load-all:
+    description: 'If set to true then execute LoadAllPackages() before the package being tested'
+    required: false
+    type: boolean
+    default: false
 env:
   CHERE_INVOKING: 1
 
@@ -37,8 +47,9 @@ runs:
          mkdir -p /tmp/gaproot/pkg/
          ln -f -s $PWD /tmp/gaproot/pkg/
 
-         # start GAP with custom GAP root, to ensure correct package version is loaded
-         GAP="$GAPROOT/gap -l /tmp/gaproot; --quitonbreak"
+         # start GAP with custom GAP root and any pre-gap commands, to ensure
+         # correct package version is loaded
+         GAP="${{ inputs.pre-gap }} $GAPROOT/gap -l /tmp/gaproot; --quitonbreak"
 
          if ${{ inputs.only-needed }} = 'true' ; then
            GAP="$GAP -A"
@@ -66,6 +77,9 @@ runs:
             LoadPackage(info.PackageName : OnlyNeeded);
          else
             LoadPackage(info.PackageName);
+         fi;
+         if ${{ inputs.load-all }} = true then
+            LoadAllPackages();
          fi;
          SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
          Print("Now running tests from ", GAP_TESTFILE, "\n");
