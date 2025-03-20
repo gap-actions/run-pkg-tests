@@ -90,7 +90,7 @@ runs:
          CloseStream(output_stream);
 
          # Treat warnings as errors if specified
-         if ${{ inputs.warnings-as-errors }} = 'true' ; then
+         if ${{ inputs.warnings-as-errors }} = 'true' then
             if PositionSublist(output, "warning") <> fail then
                 Error("Warnings were found when loading the package");
             fi;
