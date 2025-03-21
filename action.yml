@@ -60,7 +60,7 @@ runs:
              GAP="${{ inputs.pre-gap }} $GAP"
          fi
 
-         if ${{ inputs.only-needed }} = 'true' ; then
+         if "${{ inputs.only-needed }}" = "true" ; then
            GAP="$GAP -A"
          fi
 
