@@ -12,18 +12,32 @@ env:
 
 jobs:
   test:
-    name: ${{ matrix.no-coverage }} ${{ matrix.testfile }}
+    name: "${{ matrix.no-coverage }} ${{ matrix.testfile }} ${{ matrix.pre-gap == 'time' && 'pre-gap: time' || ' ' }} ${{ matrix.warn && 'warnings-as-errors' || ' ' }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         no-coverage: ['']
         testfile: ['']
+        warn: [false]
+        pre-gap: ['']
         include:
           - no-coverage: 'no-coverage'
             testfile: ''
+            warn: false
+            pre-gap: ''
           - no-coverage: ''
             testfile: 'tst/testall.g'
+            warn: false
+            pre-gap: ''
+          - no-coverage: ''
+            testfile: ''
+            warn: true
+            pre-gap: ''
+          - no-coverage: ''
+            testfile: ''
+            warn: false
+            pre-gap: 'time'
 
     steps:
       # the order of the checkout actions is important because all contents of
@@ -44,3 +58,5 @@ jobs:
         with:
           NO_COVERAGE: ${{ matrix.no-coverage }}
           GAP_TESTFILE: ${{ matrix.testfile }}
+          warnings-as-errors: ${{ matrix.warn }}
+          pre-gap: ${{ matrix.pre-gap }}
