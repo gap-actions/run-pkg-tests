@@ -21,6 +21,16 @@ inputs:
     required: false
     type: boolean
     default: false
+  warnings-as-errors:
+    description: 'If set to true then any errors produced whilst loading the package will be treated as errors'
+    required: false
+    type: boolean
+    default: false
+  pre-gap:
+    description: 'Prefix for the ''GAP'' shell variable used by this action to launch GAP (e.g. setting this to ''valgrind --trace-children=yes --leak-check=full'' will run GAP through valgrind)'
+    required: false
+    type: string
+    default: ''
 env:
   CHERE_INVOKING: 1
 
@@ -45,7 +55,12 @@ runs:
          # start GAP with custom GAP root, to ensure correct package version is loaded
          GAP="$GAPROOT/gap -l /tmp/gaproot; --quitonbreak"
 
-         if ${{ inputs.only-needed }} = 'true' ; then
+         # Prepend pre-gap prefix, if it exists
+         if [[ ! -z "${{ inputs.pre-gap }}" ]]; then
+             GAP="${{ inputs.pre-gap }} $GAP"
+         fi
+
+         if "${{ inputs.only-needed }}" = "true" ; then
            GAP="$GAP -A"
          fi
 
@@ -64,9 +79,17 @@ runs:
          if IsEmpty(GAP_TESTFILE) or not IsExistingFile(GAP_TESTFILE) then
              GAP_TESTFILE := info.TestFile;
          fi;
-         # Load the package with debug info
+
          SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
          SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PWD)");
+
+         # Capture the output of loading
+         output := "";
+         output_stream := OutputTextString(output, true);
+         SetPrintFormattingStatus(output_stream, false);
+         OutputLogTo(output_stream);
+
+         # Load the package with debug info
          if ${{ inputs.only-needed }} = true then
             LoadPackage(info.PackageName : OnlyNeeded);
          else
@@ -75,6 +98,17 @@ runs:
          if ${{ inputs.load-all }} = true then
             LoadAllPackages();
          fi;
+
+         OutputLogTo();
+         CloseStream(output_stream);
+
+         # Treat warnings as errors if specified
+         if ${{ inputs.warnings-as-errors }} = true then
+            if PositionSublist(output, "warning") <> fail then
+                Error("Warnings were found when loading the package");
+            fi;
+         fi;
+
          SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
          Print("Now running tests from ", GAP_TESTFILE, "\n");
          if EndsWith(GAP_TESTFILE, ".tst") then
