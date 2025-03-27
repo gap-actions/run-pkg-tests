@@ -26,8 +26,8 @@ All of the following inputs are optional.
     GAP through valgrind)'
   - default: `''`
 - `warnings-as-errors`:
-  - Set to `true` to treat warnings produced when loading the package as errors.
-  - default: `false`
+  - Set to `false` to not treat warnings produced when loading the package as errors.
+  - default: `true`
 
 ### Example
 

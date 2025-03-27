@@ -25,7 +25,7 @@ inputs:
     description: 'If set to true then any errors produced whilst loading the package will be treated as errors'
     required: false
     type: boolean
-    default: false
+    default: true
   pre-gap:
     description: 'Prefix for the ''GAP'' shell variable used by this action to launch GAP (e.g. setting this to ''valgrind --trace-children=yes --leak-check=full'' will run GAP through valgrind)'
     required: false
