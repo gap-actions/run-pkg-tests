@@ -20,14 +20,20 @@ All of the following inputs are optional.
 - `GAP_TESTFILE`:
   - The name of the GAP file to be read for executing the package tests.
   - default: The `TestFile` specified in `PackageInfo.g`
+- `only-needed`:
+  - If set to a non-empty string, then only needed dependencies of the package being tested are loaded.
+  - default: `''`
+- `load-all`:
+  - If set to a non-empty string, then executed `LoadAllPackages()` before the package being tested.
+  - default: `''`
 - `pre-gap`:
   - Prefix for the `GAP` shell variable used by this action to launch GAP (e.g.
     setting this to `valgrind --trace-children=yes --leak-check=full` will run
     GAP through valgrind)'
   - default: `''`
 - `warnings-as-errors`:
-  - Set to `false` to not treat warnings produced when loading the package as errors.
-  - default: `true`
+  - If set to a non-empty string, then any errors produced whilst loading the package will be treated as errors.
+  - default: `'true'`
 
 ### Example
 
