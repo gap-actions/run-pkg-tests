@@ -1,4 +1,4 @@
-# run-pkg-tests V2
+# run-pkg-tests V3
 
 This GitHub action runs the test-suite of a GAP package.
 
@@ -35,6 +35,12 @@ All of the following inputs are optional.
   - If set to a non-empty string, then any errors produced whilst loading the package will be treated as errors.
   - default: `'true'`
 
+### What's new in V3
+
+The main difference between V3 and version V2 is the change to the default
+value of `warnings-as-errors`. Specifically, in V2, warnings were not treated as
+errors by default, whereas in V3 they are.
+
 ### Example
 
 The following is a minimal example to run this action.
@@ -56,7 +62,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: gap-actions/setup-gap@v2
       - uses: gap-actions/build-pkg@v1
-      - uses: gap-actions/run-pkg-tests@v2
+      - uses: gap-actions/run-pkg-tests@v3
 ```
 
 ## Contact
