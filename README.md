@@ -19,7 +19,7 @@ All of the following inputs are optional.
   - default: `''`
 - `GAP_TESTFILE`:
   - The name of the GAP file to be read for executing the package tests.
-  - default: `'tst/testall.g'`
+  - default: The `TestFile` specified in `PackageInfo.g`
 - `pre-gap`:
   - Prefix for the `GAP` shell variable used by this action to launch GAP (e.g.
     setting this to `valgrind --trace-children=yes --leak-check=full` will run
