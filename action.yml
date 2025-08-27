@@ -4,35 +4,27 @@ inputs:
   NO_COVERAGE:
     description: 'set to a non-empty string to suppress gathering coverage'
     required: false
-    type: string
     default: ''
   GAP_TESTFILE:
     description: 'Name of the GAP file to be read for executing the package tests (overrides TestFile in PackageInfo.g)'
     required: false
-    type: string
     default: ''
   only-needed:
-    description: 'If set to true then only needed dependencies of the package being tested are loaded'
+    description: 'If set to a non-empty string, then only needed dependencies of the package being tested are loaded'
     required: false
-    type: boolean
-    default: false
+    default: ''
   load-all:
-    description: 'If set to true then execute LoadAllPackages() before the package being tested'
+    description: 'If set to a non-empty string, then execute LoadAllPackages() before the package being tested'
     required: false
-    type: boolean
-    default: false
+    default: ''
   warnings-as-errors:
-    description: 'If set to true then any errors produced whilst loading the package will be treated as errors'
+    description: 'If set to a non-empty string, then any errors produced whilst loading the package will be treated as errors'
     required: false
-    type: boolean
-    default: true
+    default: 'true'
   pre-gap:
     description: 'Prefix for the ''GAP'' shell variable used by this action to launch GAP (e.g. setting this to ''valgrind --trace-children=yes --leak-check=full'' will run GAP through valgrind)'
     required: false
-    type: string
     default: ''
-env:
-  CHERE_INVOKING: 1
 
 runs:
   using: "composite"
@@ -60,7 +52,7 @@ runs:
              GAP="${{ inputs.pre-gap }} $GAP"
          fi
 
-         if "${{ inputs.only-needed }}" = "true" ; then
+         if [[ -n "${{ inputs.only-needed }}" ]] ; then
            GAP="$GAP -A"
          fi
 
@@ -90,12 +82,12 @@ runs:
          OutputLogTo(output_stream);
 
          # Load the package with debug info
-         if ${{ inputs.only-needed }} = true then
+         if not(IsEmpty("${{ inputs.only-needed }}")) then
             LoadPackage(info.PackageName : OnlyNeeded);
          else
             LoadPackage(info.PackageName);
          fi;
-         if ${{ inputs.load-all }} = true then
+         if not(IsEmpty("${{ inputs.load-all }}")) then
             LoadAllPackages();
          fi;
 
@@ -103,7 +95,7 @@ runs:
          CloseStream(output_stream);
 
          # Treat warnings as errors if specified
-         if ${{ inputs.warnings-as-errors }} = true then
+         if not(IsEmpty("${{ inputs.warnings-as-errors }}")) then
             if PositionSublist(output, "warning") <> fail then
                 Error("Warnings were found when loading the package");
             fi;
