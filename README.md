@@ -29,6 +29,12 @@ All of the following inputs are optional.
   - Set to `false` to not treat warnings produced when loading the package as errors.
   - default: `true`
 
+### What's new in V3
+
+The main difference between V3 and version V2 is the change to the default
+value of `warnings-as-errors`. Specifically, in V2, warnings were not treated as
+errors by default, whereas in V3 they are.
+
 ### Example
 
 The following is a minimal example to run this action.
