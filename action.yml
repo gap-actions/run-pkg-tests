@@ -32,21 +32,21 @@ runs:
            local input=$1
            local option_name=$2
            if ! [[ "$input" =~ ^(true|false)$ ]]; then
-             echo "Invalid value for option $option_name. Expected 'true' or 'false', but found $input"
+             echo "Invalid value for option $option_name. Expected 'true' or 'false', but found '$input'"
              exit 1;
             fi
          }
 
          validate_mode () {
           if ! [[ "${{ inputs.mode }}" =~ ^(default|onlyneeded|loadall)$ ]]; then
-            echo "Invalid value for option mode. Expected 'default', 'onlyneeded' or 'loadall' but found ${{ inputs.mode }}"
+            echo "Invalid value for option mode. Expected 'default', 'onlyneeded' or 'loadall' but found '${{ inputs.mode }}'"
             exit 1;
           fi
          }
 
          validate_mode
-         validate_boolean "${{ inputs.NO_COVERAGE }}"
-         validate_boolean "${{ inputs.warnings-as-errors }}"
+         validate_boolean "${{ inputs.NO_COVERAGE }}" NO_COVERAGE
+         validate_boolean "${{ inputs.warnings-as-errors }}" warnings-as-errors
 
       - name: "Run tests"
         run: |
