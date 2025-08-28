@@ -98,12 +98,6 @@ jobs:
             warn: 'true'
             pre-gap: ''
             mode: 'default'
-          # test testfile
-          - no-coverage: 'false'
-            testfile: 'tst/nonsense.g'
-            warn: 'true'
-            pre-gap: ''
-            mode: 'default'
           # test warn
           - no-coverage: 'false'
             testfile: ''
@@ -122,6 +116,12 @@ jobs:
             warn: 'true'
             pre-gap: ''
             mode: 'nonsense'
+        exclude:
+          - no-coverage: 'false'
+            testfile: ''
+            warn: 'true'
+            pre-gap: ''
+            mode: 'default'
     steps:
       - name: "Clone the Example package"
         uses: actions/checkout@v5
