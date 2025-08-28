@@ -12,7 +12,7 @@ env:
 
 jobs:
   test:
-    name: "GAP_TESTFILE: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }}"
+    name: "Test action (GAP_TESTFILE: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -52,7 +52,12 @@ jobs:
             testfile: ''
             warn: 'true'
             pre-gap: ''
-            mode: ['onlyneeded', 'loadall']
+            mode: 'onlyneeded'
+          - no-coverage: 'false'
+            testfile: ''
+            warn: 'true'
+            pre-gap: ''
+            mode: 'loadall'
     steps:
       # the order of the checkout actions is important because all contents of
       # the target folder of the checkout action is removed
@@ -76,7 +81,7 @@ jobs:
           pre-gap: ${{ matrix.pre-gap }}
           mode: ${{ matrix.mode }}
   test-failure:
-    name: "Check input validation"
+    name: "Validate input (GAP_TESTFILE: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
