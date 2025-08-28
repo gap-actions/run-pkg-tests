@@ -13,16 +13,6 @@ inputs:
     description: 'Value that determines which packages are loaded before the package is tested. The possible values are ''default'', ''onlyneeded'' or ''loadall''. The option ''default'' loads GAP with default set of package; ''onlyneeded'' loads only the needed dependencies of the package being tested; ''loadall'' executes LoadAllPackages() before the package being tested.'
     required: false
     default: 'default'
-  only-needed:
-    description: 'Boolean that determines whether only the needed dependencies of the package being tested are loaded'
-    required: false
-    default: 'false'
-    deprecationMessage: 'The only-needed option is deprecated. Instead, please specify ''onlyneeded'' as the parameter to the ''mode'' option.'
-  load-all:
-    description: 'Boolean that determines whether or not to execute LoadAllPackages() before the package being tested'
-    required: false
-    default: 'false'
-    deprecationMessage: 'The load-all option is deprecated. Instead, please specify ''loadall'' as the parameter to the ''mode'' option.'
   warnings-as-errors:
     description: 'Boolean that determines whether any warnings produced whilst loading the package will be treated as errors'
     required: false
@@ -45,10 +35,7 @@ runs:
             fi
          }
 
-         # TODO remove checks of deprecated inputs once they are removed. 
          validate_boolean "${{ inputs.NO_COVERAGE }}"
-         validate_boolean "${{ inputs.only-needed }}"
-         validate_boolean "${{ inputs.load-all }}"
          validate_boolean "${{ inputs.warnings-as-errors }}"
 
          if ! [[ "${{ inputs.mode }}" =~ ^(default|onlyneeded|loadall)$ ]]; then
@@ -81,11 +68,6 @@ runs:
            GAP="$GAP -A"
          fi
 
-         # TODO: Remove once deprecated.
-         if ${{ inputs.only-needed }} && ! [ "${{ inputs.mode }}" = "onlyneeded" ] ; then
-           GAP="$GAP -A"
-         fi
-
          # Unless explicitly turned off by setting the NO_COVERAGE environment variable,
          # we collect coverage data
          if ! ${{ inputs.NO_COVERAGE }}; then
@@ -115,20 +97,10 @@ runs:
          if "${{ inputs.mode }}" = "onlyneeded" then
             LoadPackage(info.PackageName : OnlyNeeded);
          elif "&{{ inputs.mode }}" = "loadall" then
-            LoadAllPackages();
             LoadPackage(info.PackageName);
+            LoadAllPackages();
          else
             LoadPackage(info.PackageName);
-         fi;
-
-         # TODO: Remove when deprecated
-         if ${{ inputs.only-needed }} then
-            LoadPackage(info.PackageName : OnlyNeeded);
-         else
-            LoadPackage(info.PackageName);
-         fi;
-         if ${{ inputs.load-all }} then
-            LoadAllPackages();
          fi;
 
          OutputLogTo();
