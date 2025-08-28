@@ -75,3 +75,72 @@ jobs:
           warnings-as-errors: ${{ matrix.warn }}
           pre-gap: ${{ matrix.pre-gap }}
           mode: ${{ matrix.mode }}
+  test-failure:
+    name: "Check input validation"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        no-coverage: ['false']
+        testfile: ['']
+        warn: ['true']
+        pre-gap: ['']
+        mode: ['default']
+        include:
+          # test no-coverage
+          - no-coverage: 'nonsense'
+            testfile: ''
+            warn: 'true'
+            pre-gap: ''
+            mode: 'default'
+          # test testfile
+          - no-coverage: 'false'
+            testfile: 'tst/nonsense.g'
+            warn: 'true'
+            pre-gap: ''
+            mode: 'default'
+          # test warn
+          - no-coverage: 'false'
+            testfile: ''
+            warn: 'nonsense'
+            pre-gap: ''
+            mode: 'default'
+          # test pre-gap
+          - no-coverage: 'false'
+            testfile: ''
+            warn: 'true'
+            pre-gap: 'nonsense'
+            mode: 'default'
+          # test mode
+          - no-coverage: 'false'
+            testfile: ''
+            warn: 'true'
+            pre-gap: ''
+            mode: 'nonsense'
+    steps:
+      - name: "Clone the Example package"
+        uses: actions/checkout@v5
+        with:
+          repository: gap-packages/example
+      - name: "Check out this repository"
+        uses: actions/checkout@v5
+        with:
+          path: this-action/
+      - uses: gap-actions/setup-gap@v2
+        with:
+          GAP_PKGS_TO_BUILD: ''
+      - uses: gap-actions/build-pkg@v1
+      - uses: ./this-action/
+        with:
+          NO_COVERAGE: ${{ matrix.no-coverage }}
+          GAP_TESTFILE: ${{ matrix.testfile }}
+          warnings-as-errors: ${{ matrix.warn }}
+          pre-gap: ${{ matrix.pre-gap }}
+          mode: ${{ matrix.mode }}
+        continue-on-error: true
+        id: bad-input
+      - name: Check on failures
+        if: steps.bad-input.outcome != 'failure'
+        run: exit 1
+      
+      
