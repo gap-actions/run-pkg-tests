@@ -147,5 +147,3 @@ jobs:
       - name: Previous step fails
         if: steps.bad-input.outcome != 'failure'
         run: exit 1
-      
-      
