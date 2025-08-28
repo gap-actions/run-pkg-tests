@@ -12,7 +12,7 @@ env:
 
 jobs:
   test:
-    name: "${{ matrix.testfile }} mode: ${{ matrix.mode }} ${{ matrix.no-coverage == 'true' && 'no-coverage' || '' }}  ${{ matrix.pre-gap == 'time' && 'pre-gap: time' || ' ' }} ${{ matrix.warn && 'warnings-as-errors' || ' ' }}"
+    name: "GAP_TESTFILE: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }}'"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
