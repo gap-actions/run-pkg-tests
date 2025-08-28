@@ -15,24 +15,24 @@ Its behaviour can be customized via the inputs below.
 All of the following inputs are optional.
 
 - `NO_COVERAGE`:
-  - Set to a non-empty string to suppress gathering coverage.
-  - default: `''`
+  - Boolean that determines whether or not to suppress gathering coverage.
+  - default: `'false'`
 - `GAP_TESTFILE`:
-  - The name of the GAP file to be read for executing the package tests.
+  - Name of the GAP file to be read for executing the package tests (overrides TestFile in PackageInfo.g).
   - default: The `TestFile` specified in `PackageInfo.g`
-- `only-needed`:
-  - If set to a non-empty string, then only needed dependencies of the package being tested are loaded.
-  - default: `''`
-- `load-all`:
-  - If set to a non-empty string, then executed `LoadAllPackages()` before the package being tested.
-  - default: `''`
+- `mode`:
+  - Value that determines which packages are loaded before the package is tested. The possible values
+    are `'default'`, `'onlyneeded'` or `'loadall'`. The option `'default'` loads GAP with default
+    set of package; `'onlyneeded'` loads only the needed dependencies of the package being tested; 
+    `'loadall'` executes `LoadAllPackages()` before the package being tested.
+  - default: `'default'`
 - `pre-gap`:
   - Prefix for the `GAP` shell variable used by this action to launch GAP (e.g.
     setting this to `valgrind --trace-children=yes --leak-check=full` will run
     GAP through valgrind)'
   - default: `''`
 - `warnings-as-errors`:
-  - If set to a non-empty string, then any errors produced whilst loading the package will be treated as errors.
+  - Boolean that determines whether any warnings produced whilst loading the package will be treated as errors.
   - default: `'true'`
 
 ### What's new in V3
