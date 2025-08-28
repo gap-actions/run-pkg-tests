@@ -19,41 +19,40 @@ jobs:
       matrix:
         no-coverage: ['false']
         testfile: ['']
-        warn: ['false']
+        warn: ['true']
         pre-gap: ['']
         mode: ['default']
         include:
+          # test no-coverage
           - no-coverage: 'true'
-            testfile: ''
-            warn: 'false'
-            pre-gap: ''
-            mode: 'default'
-          - no-coverage: 'false'
-            testfile: 'tst/testall.g'
-            warn: 'false'
-            pre-gap: ''
-            mode: 'default'
-          - no-coverage: 'false'
             testfile: ''
             warn: 'true'
             pre-gap: ''
             mode: 'default'
+          # test testfile
+          - no-coverage: 'false'
+            testfile: 'tst/testall.g'
+            warn: 'true'
+            pre-gap: ''
+            mode: 'default'
+          # test warn
           - no-coverage: 'false'
             testfile: ''
             warn: 'false'
+            pre-gap: ''
+            mode: 'default'
+          # test pre-gap
+          - no-coverage: 'false'
+            testfile: ''
+            warn: 'true'
             pre-gap: 'time'
             mode: 'default'
+          # test mode
           - no-coverage: 'false'
             testfile: ''
-            warn: 'false'
+            warn: 'true'
             pre-gap: ''
-            mode: 'onlyneeded'
-          - no-coverage: 'false'
-            testfile: ''
-            warn: 'false'
-            pre-gap: ''
-            mode: 'loadall'
-
+            mode: ['onlyneeded', 'loadall']
     steps:
       # the order of the checkout actions is important because all contents of
       # the target folder of the checkout action is removed
