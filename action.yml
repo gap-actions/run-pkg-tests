@@ -2,23 +2,23 @@ name: 'Run package tests'
 description: 'Run package tests'
 inputs:
   NO_COVERAGE:
-    description: 'set to a non-empty string to suppress gathering coverage'
+    description: 'Boolean that determines whether or not to suppress gathering coverage'
     required: false
-    default: ''
+    default: 'false'
   GAP_TESTFILE:
     description: 'Name of the GAP file to be read for executing the package tests (overrides TestFile in PackageInfo.g)'
     required: false
     default: ''
   only-needed:
-    description: 'If set to a non-empty string, then only needed dependencies of the package being tested are loaded'
+    description: 'Boolean that determines whether only the needed dependencies of the package being tested are loaded'
     required: false
-    default: ''
+    default: 'false'
   load-all:
-    description: 'If set to a non-empty string, then execute LoadAllPackages() before the package being tested'
+    description: 'Boolean that determines whether or not to execute LoadAllPackages() before the package being tested'
     required: false
-    default: ''
+    default: 'false'
   warnings-as-errors:
-    description: 'If set to a non-empty string, then any errors produced whilst loading the package will be treated as errors'
+    description: 'Boolean that determines whether any warnings produced whilst loading the package will be treated as errors'
     required: false
     default: 'true'
   pre-gap:
@@ -29,6 +29,21 @@ inputs:
 runs:
   using: "composite"
   steps:
+      - name: "Validate input"
+        shell: bash
+        run: |
+         validate_boolean() {
+           local input=$1
+           if ! [[ "$input" =~ ^(true|false)$ ]]; then
+             exit 1;
+            fi
+         }
+
+         validate_boolean "${{ inputs.NO_COVERAGE }}"
+         validate_boolean "${{ inputs.only-needed }}"
+         validate_boolean "${{ inputs.load-all }}"
+         validate_boolean "${{ inputs.warnings-as-errors }}"
+
       - name: "Run tests"
         run: |
          set -ex
@@ -52,13 +67,13 @@ runs:
              GAP="${{ inputs.pre-gap }} $GAP"
          fi
 
-         if [[ -n "${{ inputs.only-needed }}" ]] ; then
+         if ${{ inputs.only-needed }}; then
            GAP="$GAP -A"
          fi
 
          # Unless explicitly turned off by setting the NO_COVERAGE environment variable,
          # we collect coverage data
-         if [[ -z "${{ inputs.NO_COVERAGE }}" ]]; then
+         if ! ${{ inputs.NO_COVERAGE }}; then
              mkdir -p ${COVDIR-coverage}
              GAP="$GAP --cover ${COVDIR-coverage}/$(mktemp XXXXXX).coverage"
          fi
@@ -82,12 +97,12 @@ runs:
          OutputLogTo(output_stream);
 
          # Load the package with debug info
-         if not(IsEmpty("${{ inputs.only-needed }}")) then
+         if ${{ inputs.only-needed }} then
             LoadPackage(info.PackageName : OnlyNeeded);
          else
             LoadPackage(info.PackageName);
          fi;
-         if not(IsEmpty("${{ inputs.load-all }}")) then
+         if ${{ inputs.load-all }} then
             LoadAllPackages();
          fi;
 
@@ -95,7 +110,7 @@ runs:
          CloseStream(output_stream);
 
          # Treat warnings as errors if specified
-         if not(IsEmpty("${{ inputs.warnings-as-errors }}")) then
+         if ${{ inputs.warnings-as-errors }} then
             if PositionSublist(output, "warning") <> fail then
                 Error("Warnings were found when loading the package");
             fi;
