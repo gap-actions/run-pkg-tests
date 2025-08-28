@@ -12,32 +12,47 @@ env:
 
 jobs:
   test:
-    name: "${{ matrix.no-coverage }} ${{ matrix.testfile }} ${{ matrix.pre-gap == 'time' && 'pre-gap: time' || ' ' }} ${{ matrix.warn && 'warnings-as-errors' || ' ' }}"
+    name: "${{ matrix.testfile }} mode: ${{ matrix.mode }} ${{ matrix.no-coverage == 'true' && 'no-coverage' || '' }}  ${{ matrix.pre-gap == 'time' && 'pre-gap: time' || ' ' }} ${{ matrix.warn && 'warnings-as-errors' || ' ' }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        no-coverage: ['']
+        no-coverage: ['false']
         testfile: ['']
-        warn: [false]
+        warn: ['false']
         pre-gap: ['']
+        mode: ['default']
         include:
-          - no-coverage: 'no-coverage'
+          - no-coverage: 'true'
             testfile: ''
-            warn: false
+            warn: 'false'
             pre-gap: ''
-          - no-coverage: ''
+            mode: 'default'
+          - no-coverage: 'false'
             testfile: 'tst/testall.g'
-            warn: false
+            warn: 'false'
             pre-gap: ''
-          - no-coverage: ''
+            mode: 'default'
+          - no-coverage: 'false'
             testfile: ''
-            warn: true
+            warn: 'true'
             pre-gap: ''
-          - no-coverage: ''
+            mode: 'default'
+          - no-coverage: 'false'
             testfile: ''
-            warn: false
-            pre-gap: 'time'
+            warn: 'false'
+            pre-gap: ''
+            mode: 'onlyneeded'
+          - no-coverage: 'false'
+            testfile: ''
+            warn: 'false'
+            pre-gap: ''
+            mode: 'onlyneeded'
+          - no-coverage: 'false'
+            testfile: ''
+            warn: 'false'
+            pre-gap: ''
+            mode: 'loadall'
 
     steps:
       # the order of the checkout actions is important because all contents of
@@ -60,3 +75,4 @@ jobs:
           GAP_TESTFILE: ${{ matrix.testfile }}
           warnings-as-errors: ${{ matrix.warn }}
           pre-gap: ${{ matrix.pre-gap }}
+          mode: ${{ matrix.mode }}
