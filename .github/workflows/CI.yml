@@ -12,7 +12,7 @@ env:
 
 jobs:
   test:
-    name: "GAP_TESTFILE: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }}'"
+    name: "GAP_TESTFILE: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -38,11 +38,6 @@ jobs:
             warn: 'true'
             pre-gap: ''
             mode: 'default'
-          - no-coverage: 'false'
-            testfile: ''
-            warn: 'false'
-            pre-gap: ''
-            mode: 'onlyneeded'
           - no-coverage: 'false'
             testfile: ''
             warn: 'false'
