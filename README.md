@@ -1,4 +1,4 @@
-# run-pkg-tests V4
+# run-pkg-tests v4
 
 This GitHub action runs the test-suite of a GAP package.
 
@@ -35,9 +35,9 @@ All of the following inputs are optional.
   - Boolean that determines whether any warnings produced whilst loading the package will be treated as errors.
   - default: `'true'`
 
-### What's new in V4
+### What's new in v4
 
-There are two main changes between V3 and V4: the introduction of the `mode`
+There are two main changes between v3 and v4: the introduction of the `mode`
 option, and the restriction of the allowed values for boolean-like options.
 
 #### The `mode` option
@@ -45,14 +45,14 @@ option, and the restriction of the allowed values for boolean-like options.
 The `mode` option was introduced to replace the `only-needed` and `load-all`
 options. In particular:
 
-- the setting `only-needed: 'true'` with V3 should be replaced by
-  `mode: 'onlyneeded'` with V4, which will result in `GAP` only loading the
+- the setting `only-needed: 'true'` with v3 should be replaced by
+  `mode: 'onlyneeded'` with v4, which will result in `GAP` only loading the
   needed dependencies of the package being tested;
-- the setting `load-all: 'true'` with V3 should be replaced by `mode: 'loadall'`
-  with V4, which will result in GAP executing `LoadAllPackages()` before running
+- the setting `load-all: 'true'` with v3 should be replaced by `mode: 'loadall'`
+  with v4, which will result in GAP executing `LoadAllPackages()` before running
   the package tests;
-- the combination of `only-needed: 'false'` and `load-all: 'false'` with V3
-  should be replaced with by `mode :'default'` with V4, which loads `GAP` with
+- the combination of `only-needed: 'false'` and `load-all: 'false'` with v3
+  should be replaced with by `mode :'default'` with v4, which loads `GAP` with
   the default set of packages.
 
 It is no longer possible to exactly replicate the behaviour obtained by setting
@@ -61,15 +61,15 @@ with `mode: 'loadall'`.
 
 #### Restricted boolean-like options
 
-In V3, the boolean-like options `NO_COVERAGE` and `warnings-as-errors` accepted
-any string value. In V4, these options only accept the values `'true'` and
+In v3, the boolean-like options `NO_COVERAGE` and `warnings-as-errors` accepted
+any string value. In v4, these options only accept the values `'true'` and
 `'false'`.
 
-### What's new in V3
+### What's new in v3
 
-The main difference between V3 and version V2 is the change to the default
-value of `warnings-as-errors`. Specifically, in V2, warnings were not treated as
-errors by default, whereas in V3 they are.
+The main difference between v3 and version v2 is the change to the default
+value of `warnings-as-errors`. Specifically, in v2, warnings were not treated as
+errors by default, whereas in v3 they are.
 
 ### Example
 
