@@ -5,7 +5,7 @@ inputs:
     description: 'Boolean that determines whether or not to suppress gathering coverage'
     required: false
     default: 'false'
-  GAP_TESTFILE:
+  testfile:
     description: 'Name of the GAP file to be read for executing the package tests (overrides TestFile in PackageInfo.g)'
     required: false
     default: ''
@@ -84,7 +84,7 @@ runs:
 
          cat > __TEST_RUNNNER__.g <<EOF
 
-         GAP_TESTFILE:="${{ inputs.GAP_TESTFILE }}";
+         GAP_TESTFILE:="${{ inputs.testfile }}";
          Read("PackageInfo.g");
          info := GAPInfo.PackageInfoCurrent;
          if IsEmpty(GAP_TESTFILE) or not IsExistingFile(GAP_TESTFILE) then

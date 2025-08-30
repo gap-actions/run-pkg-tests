@@ -12,7 +12,7 @@ env:
 
 jobs:
   test:
-    name: "Test action (GAP_TESTFILE: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }})"
+    name: "Test action (testfile: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -76,12 +76,12 @@ jobs:
       - uses: ./this-action/
         with:
           NO_COVERAGE: ${{ matrix.no-coverage }}
-          GAP_TESTFILE: ${{ matrix.testfile }}
+          testfile: ${{ matrix.testfile }}
           warnings-as-errors: ${{ matrix.warn }}
           pre-gap: ${{ matrix.pre-gap }}
           mode: ${{ matrix.mode }}
   test-failure:
-    name: "Validate input (GAP_TESTFILE: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }})"
+    name: "Validate input (testfile: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -138,7 +138,7 @@ jobs:
       - uses: ./this-action/
         with:
           NO_COVERAGE: ${{ matrix.no-coverage }}
-          GAP_TESTFILE: ${{ matrix.testfile }}
+          testfile: ${{ matrix.testfile }}
           warnings-as-errors: ${{ matrix.warn }}
           pre-gap: ${{ matrix.pre-gap }}
           mode: ${{ matrix.mode }}
