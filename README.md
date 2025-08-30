@@ -1,4 +1,4 @@
-# run-pkg-tests V3
+# run-pkg-tests V4
 
 This GitHub action runs the test-suite of a GAP package.
 
@@ -23,7 +23,7 @@ All of the following inputs are optional.
 - `mode`:
   - Value that determines which packages are loaded before the package is tested. The possible values
     are `'default'`, `'onlyneeded'` or `'loadall'`. The option `'default'` loads GAP with default
-    set of package; `'onlyneeded'` loads only the needed dependencies of the package being tested; 
+    set of package; `'onlyneeded'` loads only the needed dependencies of the package being tested;
     `'loadall'` executes `LoadAllPackages()` before the package being tested.
   - default: `'default'`
 - `pre-gap`:
@@ -34,6 +34,36 @@ All of the following inputs are optional.
 - `warnings-as-errors`:
   - Boolean that determines whether any warnings produced whilst loading the package will be treated as errors.
   - default: `'true'`
+
+### What's new in V4
+
+There are two main changes between V3 and V4: the introduction of the `mode`
+option, and the restriction of the allowed values for boolean-like options.
+
+#### The `mode` option
+
+The `mode` option was introduced to replace the `only-needed` and `load-all`
+options. In particular:
+
+- the setting `only-needed: 'true'` with V3 should be replaced by
+  `mode: 'onlyneeded'` with V4, which will result in `GAP` only loading the
+  needed dependencies of the package being tested;
+- the setting `load-all: 'true'` with V3 should be replaced by `mode: 'loadall'`
+  with V4, which will result in GAP executing `LoadAllPackages()` before running
+  the package tests;
+- the combination of `only-needed: 'false'` and `load-all: 'false'` with V3
+  should be replaced with by `mode :'default'` with V4, which loads `GAP` with
+  the default set of packages.
+
+It is no longer possible to exactly replicate the behaviour obtained by setting
+`only-needed: 'true'` and `load-all: 'true'`. Instead, this should be replaced
+with `mode: 'loadall'`.
+
+#### Restricted boolean-like options
+
+In V3, the boolean-like options `NO_COVERAGE` and `warnings-as-errors` accepted
+any string value. In V4, these options only accept the values `'true'` and
+`'false'`.
 
 ### What's new in V3
 
@@ -62,7 +92,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: gap-actions/setup-gap@v2
       - uses: gap-actions/build-pkg@v1
-      - uses: gap-actions/run-pkg-tests@v3
+      - uses: gap-actions/run-pkg-tests@v4
 ```
 
 ## Contact
