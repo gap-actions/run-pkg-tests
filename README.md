@@ -17,8 +17,8 @@ All of the following inputs are optional.
 - `NO_COVERAGE`:
   - Boolean that determines whether or not to suppress gathering coverage.
   - default: `'false'`
-- `GAP_TESTFILE`:
-  - Name of the GAP file to be read for executing the package tests (overrides TestFile in PackageInfo.g).
+- `testfile`:
+  - Name of the GAP file to be read for executing the package tests.
   - default: The `TestFile` specified in `PackageInfo.g`
 - `mode`:
   - Value that determines which packages are loaded before the package is tested. The possible values
@@ -37,8 +37,9 @@ All of the following inputs are optional.
 
 ### What's new in v4
 
-There are two main changes between v3 and v4: the introduction of the `mode`
-option, and the restriction of the allowed values for boolean-like options.
+There are several changes between v3 and v4: the introduction of the `mode` option,
+the renaming of the `GAP_TESTFILE` option to `testfile`,
+and the restriction of the allowed values for boolean-like options.
 
 #### The `mode` option
 
