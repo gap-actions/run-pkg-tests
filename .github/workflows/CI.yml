@@ -12,48 +12,48 @@ env:
 
 jobs:
   test:
-    name: "Test action (testfile: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }})"
+    name: "Test action (testfile: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', coverage: '${{ matrix.coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        no-coverage: ['false']
+        coverage: ['true']
         testfile: ['']
         warn: ['true']
         pre-gap: ['']
         mode: ['default']
         include:
-          # test no-coverage
-          - no-coverage: 'true'
+          # test coverage
+          - coverage: 'false'
             testfile: ''
             warn: 'true'
             pre-gap: ''
             mode: 'default'
           # test testfile
-          - no-coverage: 'false'
+          - coverage: 'true'
             testfile: 'tst/testall.g'
             warn: 'true'
             pre-gap: ''
             mode: 'default'
           # test warn
-          - no-coverage: 'false'
+          - coverage: 'true'
             testfile: ''
             warn: 'false'
             pre-gap: ''
             mode: 'default'
           # test pre-gap
-          - no-coverage: 'false'
+          - coverage: 'true'
             testfile: ''
             warn: 'true'
             pre-gap: 'time'
             mode: 'default'
           # test mode
-          - no-coverage: 'false'
+          - coverage: 'true'
             testfile: ''
             warn: 'true'
             pre-gap: ''
             mode: 'onlyneeded'
-          - no-coverage: 'false'
+          - coverage: 'true'
             testfile: ''
             warn: 'true'
             pre-gap: ''
@@ -75,49 +75,49 @@ jobs:
       - uses: gap-actions/build-pkg@v1
       - uses: ./this-action/
         with:
-          NO_COVERAGE: ${{ matrix.no-coverage }}
+          coverage: ${{ matrix.coverage }}
           testfile: ${{ matrix.testfile }}
           warnings-as-errors: ${{ matrix.warn }}
           pre-gap: ${{ matrix.pre-gap }}
           mode: ${{ matrix.mode }}
   test-failure:
-    name: "Validate input (testfile: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', NO_COVERAGE: '${{ matrix.no-coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }})"
+    name: "Validate input (testfile: '${{ matrix.testfile }}', mode: '${{ matrix.mode }}', coverage: '${{ matrix.coverage }}',  pre-gap: '${{ matrix.pre-gap }}',  warnings-as-errors: '${{ matrix.warn }})"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        no-coverage: ['false']
+        coverage: ['true']
         testfile: ['']
         warn: ['true']
         pre-gap: ['']
         mode: ['default']
         include:
-          # test no-coverage
-          - no-coverage: 'nonsense'
+          # test coverage
+          - coverage: 'nonsense'
             testfile: ''
             warn: 'true'
             pre-gap: ''
             mode: 'default'
           # test warn
-          - no-coverage: 'false'
+          - coverage: 'true'
             testfile: ''
             warn: 'nonsense'
             pre-gap: ''
             mode: 'default'
           # test pre-gap
-          - no-coverage: 'false'
+          - coverage: 'true'
             testfile: ''
             warn: 'true'
             pre-gap: 'nonsense'
             mode: 'default'
           # test mode
-          - no-coverage: 'false'
+          - coverage: 'true'
             testfile: ''
             warn: 'true'
             pre-gap: ''
             mode: 'nonsense'
         exclude:
-          - no-coverage: 'false'
+          - coverage: 'true'
             testfile: ''
             warn: 'true'
             pre-gap: ''
@@ -137,7 +137,7 @@ jobs:
       - uses: gap-actions/build-pkg@v1
       - uses: ./this-action/
         with:
-          NO_COVERAGE: ${{ matrix.no-coverage }}
+          coverage: ${{ matrix.coverage }}
           testfile: ${{ matrix.testfile }}
           warnings-as-errors: ${{ matrix.warn }}
           pre-gap: ${{ matrix.pre-gap }}

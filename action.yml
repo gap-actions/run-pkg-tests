@@ -1,10 +1,10 @@
 name: 'Run package tests'
 description: 'Run package tests'
 inputs:
-  NO_COVERAGE:
-    description: 'Boolean that determines whether or not to suppress gathering coverage'
+  coverage:
+    description: 'Boolean that determines whether GAP is instructed to collect code coverage via the `--cover` argument'
     required: false
-    default: 'false'
+    default: 'true'
   testfile:
     description: 'Name of the GAP file to be read for executing the package tests (overrides TestFile in PackageInfo.g)'
     required: false
@@ -45,7 +45,7 @@ runs:
          }
 
          validate_mode
-         validate_boolean "${{ inputs.NO_COVERAGE }}" NO_COVERAGE
+         validate_boolean "${{ inputs.coverage }}" coverage
          validate_boolean "${{ inputs.warnings-as-errors }}" warnings-as-errors
 
       - name: "Run tests"
@@ -75,11 +75,11 @@ runs:
            GAP="$GAP -A"
          fi
 
-         # Unless explicitly turned off by setting the NO_COVERAGE environment variable,
+         # Unless explicitly turned off by setting the `coverage` input to `false`
          # we collect coverage data
-         if ! ${{ inputs.NO_COVERAGE }}; then
-             mkdir -p ${COVDIR-coverage}
-             GAP="$GAP --cover ${COVDIR-coverage}/$(mktemp XXXXXX).coverage"
+         if ${{ inputs.coverage }}; then
+             mkdir -p coverage
+             GAP="$GAP --cover coverage/$(mktemp XXXXXX).coverage"
          fi
 
          cat > __TEST_RUNNNER__.g <<EOF

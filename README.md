@@ -14,9 +14,9 @@ Its behaviour can be customized via the inputs below.
 
 All of the following inputs are optional.
 
-- `NO_COVERAGE`:
-  - Boolean that determines whether or not to suppress gathering coverage.
-  - default: `'false'`
+- `coverage`:
+  - Boolean that determines whether GAP is instructed to collect code coverage via the `--cover` argument.
+  - default: `'true'`
 - `testfile`:
   - Name of the GAP file to be read for executing the package tests.
   - default: The `TestFile` specified in `PackageInfo.g`
@@ -38,8 +38,16 @@ All of the following inputs are optional.
 ### What's new in v4
 
 There are several changes between v3 and v4: the introduction of the `mode` option,
-the renaming of the `GAP_TESTFILE` option to `testfile`,
+the renaming of some options,
 and the restriction of the allowed values for boolean-like options.
+
+#### Renamed options
+
+The `GAP_TESTFILE` input was renamed to `testfile`, with no functional changes.
+
+The `NO_COVERAGE` input was replaced by the `coverage` input with flipped
+meaning. Thus if you previously set `NO_COVERAGE` to `false` you should now
+set `coverage` to `true`.
 
 #### The `mode` option
 
@@ -62,9 +70,9 @@ with `mode: 'loadall'`.
 
 #### Restricted boolean-like options
 
-In v3, the boolean-like options `NO_COVERAGE` and `warnings-as-errors` accepted
-any string value. In v4, these options only accept the values `'true'` and
-`'false'`.
+In v3, the boolean-like options such as `warnings-as-errors` accepted
+any string value. In v4, they only accept the values `'true'` and
+`'false'`, anything else results in an error.
 
 ### What's new in v3
 
