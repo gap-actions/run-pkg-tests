@@ -103,7 +103,7 @@ runs:
          # Load the package with debug info
          if "${{ inputs.mode }}" = "onlyneeded" then
             LoadPackage(info.PackageName : OnlyNeeded);
-         elif "&{{ inputs.mode }}" = "loadall" then
+         elif "${{ inputs.mode }}" = "loadall" then
             LoadPackage(info.PackageName);
             LoadAllPackages();
          else
