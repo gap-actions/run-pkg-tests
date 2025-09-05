@@ -1,4 +1,4 @@
-# run-pkg-tests v4
+# run-pkg-tests
 
 This GitHub action runs the test-suite of a GAP package.
 
@@ -38,7 +38,7 @@ All of the following inputs are optional.
 ### What's new in v4
 
 There are several changes between v3 and v4: the introduction of the `mode` option,
-the renaming of some options,
+the renaming of some options, the requirement for using `gap-actions/setup-gap@v3` or newer
 and the restriction of the allowed values for boolean-like options.
 
 #### Renamed options
@@ -99,7 +99,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - uses: gap-actions/setup-gap@v2
+      - uses: gap-actions/setup-gap@v3
       - uses: gap-actions/build-pkg@v1
       - uses: gap-actions/run-pkg-tests@v4
 ```
