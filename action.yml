@@ -116,16 +116,21 @@ runs:
          # Treat warnings as errors if specified
          ignored_prefixes := ["#I  HAP "];
          if ${{ inputs.warnings-as-errors }} then
-             pos := 0;
-             repeat
+             pos := PositionSublist(output, "warning");
+             while pos <> fail do
+                 warning := true;
                  for prefix in ignored_prefixes do
                      l := Length(prefix);
-                     if pos > l and output{[pos-l .. pos-1]} <> prefix then
-                         Error("Warnings were found when loading the package");
+                     if pos > l and output{[pos-l .. pos-1]} = prefix then
+                         warning := false;
+                         break;
                      fi;
                  od;
+                 if warning then
+                     Error("Warnings were found when loading the package");
+                 fi;
                  pos := PositionSublist(output, "warning", pos + 1);
-             until pos = fail;
+             od;
          fi;
 
          SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
