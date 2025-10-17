@@ -103,10 +103,23 @@ runs:
          CloseStream(output_stream);
 
          # Treat warnings as errors if specified
-         if ${{ inputs.warnings-as-errors }} = true then
-            if PositionSublist(output, "warning") <> fail then
-                Error("Warnings were found when loading the package");
-            fi;
+         ignored_prefixes := ["#I  HAP "];
+         if ${{ inputs.warnings-as-errors }} then
+             pos := PositionSublist(output, "warning");
+             while pos <> fail do
+                 warning := true;
+                 for prefix in ignored_prefixes do
+                     l := Length(prefix);
+                     if pos > l and output{[pos-l .. pos-1]} = prefix then
+                         warning := false;
+                         break;
+                     fi;
+                 od;
+                 if warning then
+                     Error("Warnings were found when loading the package");
+                 fi;
+                 pos := PositionSublist(output, "warning", pos + 1);
+             od;
          fi;
 
          SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
