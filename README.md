@@ -1,4 +1,4 @@
-# run-pkg-tests v4
+# run-pkg-tests
 
 This GitHub action runs the test-suite of a GAP package.
 
@@ -99,8 +99,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - uses: gap-actions/setup-gap@v2
-      - uses: gap-actions/build-pkg@v1
+      - uses: gap-actions/setup-gap@v3
+      - uses: gap-actions/build-pkg@v2
       - uses: gap-actions/run-pkg-tests@v4
 ```
 
