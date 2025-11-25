@@ -25,123 +25,127 @@ inputs:
 runs:
   using: "composite"
   steps:
-      - name: "Validate input"
-        shell: bash
-        run: |
-         validate_boolean() {
-           local input=$1
-           local option_name=$2
-           if ! [[ "$input" =~ ^(true|false)$ ]]; then
-             echo "Invalid value for option $option_name. Expected 'true' or 'false', but found '$input'"
-             exit 1;
-            fi
-         }
-
-         validate_mode () {
-          if ! [[ "${{ inputs.mode }}" =~ ^(default|onlyneeded|loadall)$ ]]; then
-            echo "Invalid value for option mode. Expected 'default', 'onlyneeded' or 'loadall' but found '${{ inputs.mode }}'"
+    - name: "Validate input"
+      shell: bash
+      run: |
+        validate_boolean() {
+          local input=$1
+          local option_name=$2
+          if ! [[ "$input" =~ ^(true|false)$ ]]; then
+            echo "::error::Invalid value for option $option_name. Expected 'true' or 'false', but found '$input'"
             exit 1;
           fi
-         }
+        }
 
-         validate_mode
-         validate_boolean "${{ inputs.coverage }}" coverage
-         validate_boolean "${{ inputs.warnings-as-errors }}" warnings-as-errors
+        validate_mode () {
+          if ! [[ "${{ inputs.mode }}" =~ ^(default|onlyneeded|loadall)$ ]]; then
+            echo "::error::Invalid value for option mode. Expected 'default', 'onlyneeded' or 'loadall' but found '${{ inputs.mode }}'"
+            exit 1;
+          fi
+        }
 
-      - name: "Run tests"
-        run: |
-         set -ex
+        validate_mode
+        validate_boolean "${{ inputs.coverage }}" coverage
+        validate_boolean "${{ inputs.warnings-as-errors }}" warnings-as-errors
 
-         GAPROOT=${GAPROOT-$HOME/gap}
+    - name: "Run tests"
+      shell: bash
+      run: |
+        set -ex
 
-         # set up a custom GAP root containing only this package, so that
-         # we can force GAP to load the correct version of this package
-         # (we already did that in build_pkg.sh, but we do it again here,
-         # to allow the occasional instance where a package wants to also
-         # run the tests of others packages, by invoking this script multiple
-         # times in different directories)
-         mkdir -p /tmp/gaproot/pkg/
-         ln -f -s $PWD /tmp/gaproot/pkg/
+        GAPROOT=${GAPROOT-$HOME/gap}
 
-         # start GAP with custom GAP root, to ensure correct package version is loaded
-         GAP="$GAPROOT/gap -l /tmp/gaproot; --quitonbreak"
+        # set up a custom GAP root containing only this package, so that
+        # we can force GAP to load the correct version of this package
+        # (we already did that in build_pkg.sh, but we do it again here,
+        # to allow the occasional instance where a package wants to also
+        # run the tests of others packages, by invoking this script multiple
+        # times in different directories)
+        mkdir -p /tmp/gaproot/pkg/
+        ln -f -s $PWD /tmp/gaproot/pkg/
 
-         # Prepend pre-gap prefix, if it exists
-         if [[ ! -z "${{ inputs.pre-gap }}" ]]; then
-             GAP="${{ inputs.pre-gap }} $GAP"
-         fi
+        # start GAP with custom GAP root, to ensure correct package version is loaded
+        GAP="$GAPROOT/gap -l /tmp/gaproot; --quitonbreak"
 
-         if [ "${{ inputs.mode }}" = "onlyneeded" ]; then
-             GAP="$GAP -A"
-         fi
+        # Prepend pre-gap prefix, if it exists
+        if [[ ! -z "${{ inputs.pre-gap }}" ]]; then
+          GAP="${{ inputs.pre-gap }} $GAP"
+        fi
 
-         # Unless explicitly turned off by setting the `coverage` input to `false`
-         # we collect coverage data
-         if ${{ inputs.coverage }}; then
-             mkdir -p coverage
-             GAP="$GAP --cover coverage/$(mktemp XXXXXX).coverage"
-         fi
+        if [ "${{ inputs.mode }}" = "onlyneeded" ]; then
+          GAP="$GAP -A"
+        fi
 
-         cat > __TEST_RUNNNER__.g <<EOF
+        # Unless explicitly turned off by setting the `coverage` input to `false`
+        # we collect coverage data
+        if ${{ inputs.coverage }}; then
+          mkdir -p coverage
+          GAP="$GAP --cover coverage/$(mktemp XXXXXX).coverage"
+        fi
 
-         GAP_TESTFILE:="${{ inputs.testfile }}";
-         Read("PackageInfo.g");
-         info := GAPInfo.PackageInfoCurrent;
-         if IsEmpty(GAP_TESTFILE) or not IsExistingFile(GAP_TESTFILE) then
-             GAP_TESTFILE := info.TestFile;
-         fi;
+        cat > __TEST_RUNNNER__.g <<EOF
 
-         SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
-         SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PWD)");
+        GAP_TESTFILE:="${{ inputs.testfile }}";
+        Read("PackageInfo.g");
+        info := GAPInfo.PackageInfoCurrent;
+        if IsEmpty(GAP_TESTFILE) then
+          GAP_TESTFILE := info.TestFile;
+        elif not IsExistingFile(GAP_TESTFILE) then
+          Exec("echo \"::error::Provided testfile '${{ inputs.testfile }}' does not exist\"");
+          FORCE_QUIT_GAP(1);
+        fi;
 
-         # Capture the output of loading
-         output := "";
-         output_stream := OutputTextString(output, true);
-         SetPrintFormattingStatus(output_stream, false);
-         OutputLogTo(output_stream);
+        SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
+        SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PWD)");
 
-         # Load the package with debug info
-         if "${{ inputs.mode }}" = "onlyneeded" then
-             LoadPackage(info.PackageName : OnlyNeeded);
-         elif "${{ inputs.mode }}" = "loadall" then
-             LoadPackage(info.PackageName);
-             LoadAllPackages();
-         else
-             LoadPackage(info.PackageName);
-         fi;
+        # Capture the output of loading
+        output := "";
+        output_stream := OutputTextString(output, true);
+        SetPrintFormattingStatus(output_stream, false);
+        OutputLogTo(output_stream);
 
-         OutputLogTo();
-         CloseStream(output_stream);
+        # Load the package with debug info
+        if "${{ inputs.mode }}" = "onlyneeded" then
+          LoadPackage(info.PackageName : OnlyNeeded);
+        elif "${{ inputs.mode }}" = "loadall" then
+          LoadPackage(info.PackageName);
+          LoadAllPackages();
+        else
+          LoadPackage(info.PackageName);
+        fi;
 
-         # Treat warnings as errors if specified
-         ignored_prefixes := ["#I  HAP "];
-         if ${{ inputs.warnings-as-errors }} then
-             pos := PositionSublist(output, "warning");
-             while pos <> fail do
-                 warning := true;
-                 for prefix in ignored_prefixes do
-                     l := Length(prefix);
-                     if pos > l and output{[pos-l .. pos-1]} = prefix then
-                         warning := false;
-                         break;
-                     fi;
-                 od;
-                 if warning then
-                     Error("Warnings were found when loading the package");
-                 fi;
-                 pos := PositionSublist(output, "warning", pos + 1);
-             od;
-         fi;
+        OutputLogTo();
+        CloseStream(output_stream);
 
-         SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
-         Print("Now running tests from ", GAP_TESTFILE, "\n");
-         if EndsWith(GAP_TESTFILE, ".tst") then
-             QUIT_GAP(Test(GAP_TESTFILE, rec(compareFunction := "uptowhitespace")));
-         else
-             Read(GAP_TESTFILE);
-             Error("Package TestFile did not exit gap");
-         fi;
-         EOF
-         $GAP __TEST_RUNNNER__.g
+        # Treat warnings as errors if specified
+        ignored_prefixes := ["#I  HAP "];
+        if ${{ inputs.warnings-as-errors }} then
+          pos := PositionSublist(output, "warning");
+          while pos <> fail do
+            warning := true;
+            for prefix in ignored_prefixes do
+              l := Length(prefix);
+              if pos > l and output{[pos-l .. pos-1]} = prefix then
+                warning := false;
+                break;
+              fi;
+            od;
+            if warning then
+              Exec("echo \"::error::Warnings were found when loading the package\"");
+              FORCE_QUIT_GAP(1);
+            fi;
+            pos := PositionSublist(output, "warning", pos + 1);
+          od;
+        fi;
 
-        shell: bash
+        SetInfoLevel(InfoPackageLoading, PACKAGE_ERROR);
+        Print("Now running tests from ", GAP_TESTFILE, "\n");
+        if EndsWith(GAP_TESTFILE, ".tst") then
+          QUIT_GAP(Test(GAP_TESTFILE, rec(compareFunction := "uptowhitespace")));
+        else
+          Read(GAP_TESTFILE);
+          Exec("echo \"::error::Package TestFile did not exit GAP\"");
+          FORCE_QUIT_GAP(1);
+        fi;
+        EOF
+        $GAP __TEST_RUNNNER__.g
