@@ -83,7 +83,7 @@ runs:
           GAP="$GAP --cover coverage/$(mktemp XXXXXX).coverage"
         fi
 
-        cat > __TEST_RUNNNER__.g <<EOF
+        cat > __TEST_RUNNER__.g <<EOF
 
         GAP_TESTFILE:="${{ inputs.testfile }}";
         Read("PackageInfo.g");
@@ -148,4 +148,5 @@ runs:
           FORCE_QUIT_GAP(1);
         fi;
         EOF
-        $GAP __TEST_RUNNNER__.g
+        $GAP __TEST_RUNNER__.g
+        rm __TEST_RUNNER__.g
