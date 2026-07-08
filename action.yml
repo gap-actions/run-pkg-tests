@@ -106,12 +106,16 @@ runs:
 
         # Load the package with debug info
         if "${{ inputs.mode }}" = "onlyneeded" then
-          LoadPackage(info.PackageName : OnlyNeeded);
+          check_load := LoadPackage(info.PackageName : OnlyNeeded);
         elif "${{ inputs.mode }}" = "loadall" then
-          LoadPackage(info.PackageName);
+          check_load := LoadPackage(info.PackageName);
           LoadAllPackages();
         else
-          LoadPackage(info.PackageName);
+          check_load := LoadPackage(info.PackageName);
+        fi;
+        if check_load <> true then
+          Exec("echo \"::error::Package could not be loaded\"");
+          FORCE_QUIT_GAP(1);
         fi;
 
         OutputLogTo();
