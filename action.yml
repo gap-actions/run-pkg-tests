@@ -53,20 +53,6 @@ runs:
       run: |
         set -ex
 
-        GAPROOT=${GAPROOT-$HOME/gap}
-
-        # set up a custom GAP root containing only this package, so that
-        # we can force GAP to load the correct version of this package
-        # (we already did that in build_pkg.sh, but we do it again here,
-        # to allow the occasional instance where a package wants to also
-        # run the tests of others packages, by invoking this script multiple
-        # times in different directories)
-        mkdir -p /tmp/gaproot/pkg/
-        ln -f -s $PWD /tmp/gaproot/pkg/
-
-        # start GAP with custom GAP root, to ensure correct package version is loaded
-        GAP="$GAPROOT/gap -l /tmp/gaproot; --quitonbreak"
-
         # Prepend pre-gap prefix, if it exists
         if [[ ! -z "${{ inputs.pre-gap }}" ]]; then
           GAP="${{ inputs.pre-gap }} $GAP"
@@ -96,7 +82,7 @@ runs:
         fi;
 
         SetInfoLevel(InfoPackageLoading, PACKAGE_DEBUG);
-        SetPackagePath(info.PackageName, "/tmp/gaproot/pkg/$(basename $PWD)");
+        SetPackagePath(info.PackageName, "$PWD");
 
         # Capture the output of loading
         output := "";
