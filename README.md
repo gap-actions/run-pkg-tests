@@ -38,7 +38,7 @@ All of the following inputs are optional.
 ### What's new in v4
 
 There are several changes between v3 and v4: the introduction of the `mode` option,
-the renaming of some options,
+the renaming of some options, the requirement for using `gap-actions/setup-gap@v3` or newer
 and the restriction of the allowed values for boolean-like options.
 
 #### Renamed options
